@@ -143,7 +143,7 @@ public class ATMTest {
         when(card.getAccount()).thenReturn(account);
         double accBalance = 830;
         when(account.getBalance()).thenReturn(accBalance);
-        double amount = 1430;
+        double amount = 930;
         atm.getCash(amount);
         InOrder inOrder=inOrder(card,account);
         inOrder.verify(card).getAccount();
