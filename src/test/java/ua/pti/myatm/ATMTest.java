@@ -75,11 +75,11 @@ public class ATMTest {
         int pinCode = 1111;
         when(card.checkPin(pinCode)).thenReturn(true);
         when(card.isBlocked()).thenReturn(false);
+        atm.validateCard(card, pinCode);
         Account acc = mock(Account.class);
         when(card.getAccount()).thenReturn(acc);
         double accBalance = 830;
         when(acc.getBalance()).thenReturn(accBalance);
-        assertTrue(atm.validateCard(card, pinCode));// need assert or just validate?
         assertEquals(accBalance, atm.checkBalance(), 0.0);
         InOrder inOrder = inOrder(card,acc);
         inOrder.verify(card).getAccount();
@@ -101,7 +101,7 @@ public class ATMTest {
         when(acc.getBalance()).thenReturn(accBalance);
         atm.validateCard(card, pinCode);
         double amount = 230;
-        when(card.getAccount().withdrow(amount)).thenReturn(amount);
+        when(card.getAccount().withdrow(amount)).thenReturn(accBalance - amount);
         atm.getCash(amount);
         when(acc.getBalance()).thenReturn(accBalance - amount);
         assertEquals(atm.getMoneyInATM(), atmBalance - amount, 0.0);
