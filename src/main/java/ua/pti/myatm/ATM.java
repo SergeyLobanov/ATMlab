@@ -39,7 +39,7 @@ public class ATM {
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInsertedException {
-        if( card == null || card.isBlocked()){
+        if(card.isBlocked()){
             throw new NoCardInsertedException();
         }
         else {

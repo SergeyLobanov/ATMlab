@@ -56,7 +56,7 @@ public class ATMTest {
         verify(card).isBlocked();
     }
     @Test
-     public void testValidateCardWithIllegalPIN() {
+    public void testValidateCardWithIllegalPIN() {
         System.out.println("validateCardWithIllegalPINCode");
         ATM atm = new ATM(1000);
         Card card = mock(Card.class);
