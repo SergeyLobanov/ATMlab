@@ -68,7 +68,7 @@ public class ATMTest {
     }
 
     @Test
-    public void testCheckBalance() throws NoCardInsertedException{
+    public void testCheckBalance() throws NoCardInsertedException {
         System.out.println("checkBalance");
         ATM atm = new ATM(1000);
         Card card = mock(Card.class);
@@ -87,7 +87,7 @@ public class ATMTest {
     }
 
     @Test
-    public void testGetCash() throws NotEnoughMoneyInATMException, NoCardInsertedException, NotEnoughMoneyInAccountException {
+    public void testGetCash() throws NotEnoughMoneyInAccountException, NotEnoughMoneyInATMException, NoCardInsertedException {
         System.out.println("getCash");
         double atmBalance = 1000;
         ATM atm = new ATM(atmBalance);
@@ -116,7 +116,7 @@ public class ATMTest {
     }
 
     @Test(expected = NotEnoughMoneyInATMException.class)
-    public void testGetCashForNotEnoughMoneyInATMException() throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException{
+    public void testGetCashForNotEnoughMoneyInATMException() throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException {
         System.out.println("getCashForNotEnoughMoneyInATM");
         ATM atm = new ATM(1000);
         Card card = mock(Card.class);
