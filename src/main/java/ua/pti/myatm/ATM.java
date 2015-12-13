@@ -84,4 +84,3 @@ class NotEnoughMoneyInAccountException extends Exception{
         super("Your Account have not enought money. Take less amount.");
     }
 }
-
