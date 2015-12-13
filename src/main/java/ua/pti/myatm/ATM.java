@@ -6,8 +6,8 @@ public class ATM {
     private Card card;
 
     //Можно задавать количество денег в банкомате 
-    ATM(double moneyInATM){
-        if( moneyInATM < 0 )
+    ATM(double moneyInATM) {
+        if (moneyInATM < 0)
             throw new UnsupportedOperationException("ATM can't have negative balance");
         else
             this.ATMBalance = moneyInATM;
@@ -17,28 +17,26 @@ public class ATM {
     public double getMoneyInATM() {
         return ATMBalance;
     }
-        
+
     //С вызова данного метода начинается работа с картой
     //Метод принимает карту и пин-код, проверяет пин-код карты и не заблокирована ли она
     //Если неправильный пин-код или карточка заблокирована, возвращаем false. При этом, вызов всех последующих методов
     // у ATM с данной картой должен генерировать исключение NoCardInserted
-    public boolean validateCard(Card card, int pinCode){
-        if( !card.checkPin(pinCode) || card.isBlocked()){
+    public boolean validateCard(Card card, int pinCode) {
+        if (!card.checkPin(pinCode) || card.isBlocked()) {
             return false;
-        }
-        else {
+        } else {
             this.card = card;
             return true;
         }
     }
 
     //Возвращает сколько денег есть на счету
-    public double checkBalance() throws NoCardInserted{
-        if( card != null ){
+    public double checkBalance() throws NoCardInserted {
+        if (card != null) {
             Account acc = card.getAccount();
             return acc.getBalance();
-        }
-        else {
+        } else {
             throw new NoCardInserted();
         }
     }
@@ -49,24 +47,17 @@ public class ATM {
     //Если недостаточно денег на счете, то должно генерироваться исключение NotEnoughMoneyInAccount
     //Если недостаточно денег в банкомате, то должно генерироваться исключение NotEnoughMoneyInATM
     //При успешном снятии денег, указанная сумма должна списываться со счета, и в банкомате должно уменьшаться количество денег
-    public double getCash(double amount) throws NoCardInserted, NotEnoughMoneyInATM, NotEnoughMoneyInAccount{
+    public double getCash(double amount) throws NoCardInserted, NotEnoughMoneyInATM, NotEnoughMoneyInAccount {
         Account acc = card.getAccount();
-        if ( amount > 0) {
-            if ( amount > this.getMoneyInATM()) {
-                throw new NotEnoughMoneyInATM();
-            }
-            else if (amount > this.checkBalance()) {
-                throw new NotEnoughMoneyInAccount();
-            }
-            else {
+        if (amount > this.getMoneyInATM()) {
+            throw new NotEnoughMoneyInATM();
+        } else if (amount > this.checkBalance()) {
+            throw new NotEnoughMoneyInAccount();
+        } else {
             ATMBalance -= acc.withdrow(amount);
+            return this.checkBalance();
             }
-                return this.checkBalance();
-            }
-        else{
-            throw new UnsupportedOperationException("You can't get amount less than 0");
         }
-    }
 }
 
 class NoCardInserted extends Exception{
