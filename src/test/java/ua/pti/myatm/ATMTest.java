@@ -55,14 +55,15 @@ public class ATMTest {
         when(card.isBlocked()).thenReturn(false);
         when(card.getAccount()).thenReturn(acc);
         when(acc.getBalance()).thenReturn(accBalance);
-//        InOrder inOrder = inOrder(card,acc);
-//        inOrder.verify(card).checkPin(pinCode);
-//        inOrder.verify(card).isBlocked();
-//        inOrder.verify(card).getAccount();
-//        inOrder.verify(acc).getBalance();
-        double expResult = 0.0;
+        atm.validateCard(card, pinCode);
+        atm.checkBalance();
+        InOrder inOrder = inOrder(card,acc);
+        inOrder.verify(card).checkPin(pinCode);
+        inOrder.verify(card).isBlocked();
+        inOrder.verify(card).getAccount();
+        inOrder.verify(acc).getBalance();
         double result = atm.checkBalance();
-        assertEquals(expResult, result, 0.0);
+        assertEquals(accBalance, result, 0.0);
     }
 
     @Test

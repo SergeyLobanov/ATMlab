@@ -33,11 +33,12 @@ public class ATM {
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInserted {
-        if (card != null) {
+        if(card==null && card.isBlocked()){
+            throw new NoCardInserted();
+        }
+        else {
             Account acc = card.getAccount();
             return acc.getBalance();
-        } else {
-            throw new NoCardInserted();
         }
     }
 
