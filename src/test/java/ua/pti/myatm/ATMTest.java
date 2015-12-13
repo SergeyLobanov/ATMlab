@@ -21,109 +21,134 @@ public class ATMTest {
     @Test
     public void testGetMoneyInATM() {
         System.out.println("getMoneyInATM");
-        ATM atm = new ATM(0.0);
-        double expResult = 0.0;
+        ATM atm = new ATM(1000);
+        double expResult = 1000;
         double result = atm.getMoneyInATM();
         assertEquals(expResult, result, 0.0);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testConstructor(){
-        ATM atm = new ATM(-700);
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegativeATMBalance(){
+        System.out.println("getNegativeATMBalance");
+        ATM atm = new ATM(-230);
     }
 
     @Test
     public void testValidateCard() {
         System.out.println("validateCard");
-        Card card = Mockito.mock(Card.class);
-        int pinCode = 0;
-        ATM atm = new ATM(1234.5);
-        when(card.isBlocked()).thenReturn(true);
-        when(card.checkPin(pinCode)).thenReturn(true);
-        assertFalse(atm.validateCard(card, pinCode));
-    }
-
-    @Test
-    public void testCheckBalance() throws NoCardInserted{
-        System.out.println("checkBalance");
-        ATM atm = new ATM(0.0);
-        int pinCode = 1111;
-        Card card = Mockito.mock(Card.class);
-        Account acc = Mockito.mock(Account.class);
-        double accBalance = 500;
-        when(card.checkPin(pinCode)).thenReturn(true);
-        when(card.isBlocked()).thenReturn(false);
-        when(card.getAccount()).thenReturn(acc);
-        when(acc.getBalance()).thenReturn(accBalance);
-        atm.validateCard(card, pinCode);
-        atm.checkBalance();
-        InOrder inOrder = inOrder(card,acc);
-        inOrder.verify(card).checkPin(pinCode);
-        inOrder.verify(card).isBlocked();
-        inOrder.verify(card).getAccount();
-        inOrder.verify(acc).getBalance();
-        double result = atm.checkBalance();
-        assertEquals(accBalance, result, 0.0);
-    }
-
-    @Test
-    public void testGetCash() throws NotEnoughMoneyInATM, NoCardInserted, NotEnoughMoneyInAccount {
-        System.out.println("getCash");
         ATM atm = new ATM(1000);
         Card card = mock(Card.class);
-        Account acc = Mockito.mock(Account.class);
         int pinCode = 1111;
-        double accBalance = 830;
-        double amount = 230;
         when(card.checkPin(pinCode)).thenReturn(true);
         when(card.isBlocked()).thenReturn(false);
-        when(card.getAccount()).thenReturn(acc);
-        when(acc.getBalance()).thenReturn(accBalance);
-       // when(card.getAccount().withdrow(amount)).thenReturn(accBalance - amount);
-        atm.validateCard(card, pinCode);
-        atm.getCash(amount);
-//        InOrder inOrder = inOrder(card,acc);
-//        inOrder.verify(card,times(1)).checkPin(pinCode);
-//        inOrder.verify(card,times(1)).isBlocked();
-//        inOrder.verify(card,times(3)).getAccount();
-//        inOrder.verify(acc).getBalance();
-//        inOrder.verify(acc,times(1)).withdrow(amount);
-        when(acc.getBalance()).thenReturn(accBalance - amount);
-        assertEquals(600,acc.getBalance(),0.0);
+        assertTrue(atm.validateCard(card, pinCode));
     }
 
-    @Test(expected = NotEnoughMoneyInATM.class)
-    public void testGetCashForNotEnoughMoneyInATMException() throws NoCardInserted, NotEnoughMoneyInATM, NotEnoughMoneyInAccount{
-        System.out.println("getCashForNotEnoughMoneyInATM");
+    @Test
+    public void testValidateBlockedCard() {
+        System.out.println("validateBlockedCard");
         ATM atm = new ATM(1000);
-        Card card = Mockito.mock(Card.class);
-        Account acc = Mockito.mock(Account.class);
+        Card card = mock(Card.class);
         int pinCode = 1111;
         when(card.checkPin(pinCode)).thenReturn(true);
+        when(card.isBlocked()).thenReturn(true);
+        assertFalse(atm.validateCard(card, pinCode));
+        verify(card).isBlocked();
+    }
+    @Test
+     public void testValidateCardWithIllegalPIN() {
+        System.out.println("validateCardWithIllegalPINCode");
+        ATM atm = new ATM(1000);
+        Card card = mock(Card.class);
+        int pinCode = 1111;
+        when(card.checkPin(pinCode)).thenReturn(false);
+        when(card.isBlocked()).thenReturn(false);
+        assertFalse(atm.validateCard(card, pinCode));
+        verify(card).checkPin(pinCode);//do we need it?
+    }
+
+    @Test
+    public void testCheckBalance() throws NoCardInsertedException{
+        System.out.println("checkBalance");
+        ATM atm = new ATM(1000);
+        Card card = mock(Card.class);
+        int pinCode = 1111;
+        when(card.checkPin(pinCode)).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        Account acc = mock(Account.class);
         when(card.getAccount()).thenReturn(acc);
+        double accBalance = 830;
+        when(acc.getBalance()).thenReturn(accBalance);
+        assertTrue(atm.validateCard(card, pinCode));// need assert or just validate?
+        assertEquals(accBalance, atm.checkBalance(), 0.0);
+        InOrder inOrder = inOrder(card,acc);
+        inOrder.verify(card).getAccount();
+        inOrder.verify(acc).getBalance();
+    }
+
+    @Test
+    public void testGetCash() throws NotEnoughMoneyInATMException, NoCardInsertedException, NotEnoughMoneyInAccountException {
+        System.out.println("getCash");
+        double atmBalance = 1000;
+        ATM atm = new ATM(atmBalance);
+        Card card = mock(Card.class);
+        int pinCode = 1111;
+        when(card.checkPin(pinCode)).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        Account acc = mock(Account.class);
+        when(card.getAccount()).thenReturn(acc);
+        double accBalance = 830;
+        when(acc.getBalance()).thenReturn(accBalance);
         atm.validateCard(card, pinCode);
+        double amount = 230;
+        when(card.getAccount().withdrow(amount)).thenReturn(amount);
+        atm.getCash(amount);
+        when(acc.getBalance()).thenReturn(accBalance - amount);
+        assertEquals(atm.getMoneyInATM(), atmBalance - amount, 0.0);
+        assertEquals(atm.checkBalance(), accBalance - amount, 0.0);
+        assertEquals(600, acc.getBalance(), 0.0);//we need obvious chek?
+//        InOrder inOrder = inOrder(card,acc);
+//        inOrder.verify(card).checkPin(pinCode);
+//        inOrder.verify(card).isBlocked();
+//        inOrder.verify(card).getAccount();
+//        inOrder.verify(acc, atLeastOnce()).getBalance();
+//        inOrder.verify(acc, times(1)).withdrow(amount);
+    }
+
+    @Test(expected = NotEnoughMoneyInATMException.class)
+    public void testGetCashForNotEnoughMoneyInATMException() throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException{
+        System.out.println("getCashForNotEnoughMoneyInATM");
+        ATM atm = new ATM(1000);
+        Card card = mock(Card.class);
+        Account acc = mock(Account.class);
+        int pinCode = 1111;
+        when(card.checkPin(pinCode)).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        atm.validateCard(card, pinCode);
+        when(card.getAccount()).thenReturn(acc);
         atm.checkBalance();
         double amount = 2000;
         atm.getCash(amount);
     }
 
-    @Test(expected = NotEnoughMoneyInAccount.class)
-    public void testGetCashForNotEnoughMoneyInAccount() throws NoCardInserted, NotEnoughMoneyInATM, NotEnoughMoneyInAccount{
+    @Test(expected = NotEnoughMoneyInAccountException.class)
+    public void testGetCashForNotEnoughMoneyInAccount() throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException{
         System.out.println("getCashNotEnoughMoneyInAccount");
         ATM atm = new ATM(1000);
         Card card = Mockito.mock(Card.class);
-        Account account = Mockito.mock(Account.class);
         int pinCode = 1111;
-        double accBalance = 300;
-        double amount = 330;
         when(card.checkPin(pinCode)).thenReturn(true);
         when(card.isBlocked()).thenReturn(false);
+        atm.validateCard(card, pinCode);
+        atm.checkBalance();
+        Account account = Mockito.mock(Account.class);
         when(card.getAccount()).thenReturn(account);
+        double accBalance = 830;
         when(account.getBalance()).thenReturn(accBalance);
-        when(card.getAccount().withdrow(amount)).thenReturn(accBalance-amount);
-        InOrder inOrder=inOrder(card,account);
-        atm.validateCard(card,pinCode);
+        double amount = 1430;
+        when(card.getAccount().withdrow(amount)).thenReturn(amount);
         atm.getCash(amount);
+        InOrder inOrder=inOrder(card,account);
         inOrder.verify(card).getAccount();
         inOrder.verify(account).getBalance();
     }
