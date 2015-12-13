@@ -103,18 +103,22 @@ public class ATMTest {
         Card card = mock(Card.class);
         int pinCode = 1111;
         when(card.checkPin(pinCode)).thenReturn(true);
-        when(card.isBlocked()).thenReturn(false);
+        when(card.isBlocked()).thenReturn(false);;
+        atm.validateCard(card, pinCode);
         Account acc = mock(Account.class);
         when(card.getAccount()).thenReturn(acc);
         double accBalance = 830;
         when(acc.getBalance()).thenReturn(accBalance);
-        atm.validateCard(card, pinCode);
         double amount = 230;
         when(card.getAccount().withdrow(amount)).thenReturn(amount);
         atm.getCash(amount);
+        InOrder inOrder = inOrder(card, acc);
+        inOrder.verify(card).checkPin(pinCode);
+        inOrder.verify(card).isBlocked();
+        inOrder.verify(card, times(4)).getAccount();
+        inOrder.verify(acc, atLeastOnce()).getBalance();
         when(acc.getBalance()).thenReturn(accBalance - amount);
-        assertEquals(atm.getMoneyInATM(), atmBalance - amount, 0.0);
-        assertEquals(atm.checkBalance(), accBalance - amount, 0.0);
+        assertEquals(600, acc.getBalance(), 0.0);
     }
 
     @Test(expected = NotEnoughMoneyInATMException.class)
