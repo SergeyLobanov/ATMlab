@@ -135,21 +135,20 @@ public class ATMTest {
     public void testGetCashForNotEnoughMoneyInAccount() throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException{
         System.out.println("getCashNotEnoughMoneyInAccount");
         ATM atm = new ATM(1000);
-        Card card = Mockito.mock(Card.class);
+        Card card = mock(Card.class);
         int pinCode = 1111;
         when(card.checkPin(pinCode)).thenReturn(true);
         when(card.isBlocked()).thenReturn(false);
         atm.validateCard(card, pinCode);
-        atm.checkBalance();
-        Account account = Mockito.mock(Account.class);
-        when(card.getAccount()).thenReturn(account);
+        Account acc = mock(Account.class);
+        when(card.getAccount()).thenReturn(acc);
         double accBalance = 830;
-        when(account.getBalance()).thenReturn(accBalance);
+        when(acc.getBalance()).thenReturn(accBalance);
         double amount = 1430;
         when(card.getAccount().withdrow(amount)).thenReturn(amount);
         atm.getCash(amount);
-        InOrder inOrder=inOrder(card,account);
+        InOrder inOrder=inOrder(card,acc);
         inOrder.verify(card).getAccount();
-        inOrder.verify(account).getBalance();
+        inOrder.verify(acc).getBalance();
     }
 }
