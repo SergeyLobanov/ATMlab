@@ -39,13 +39,9 @@ public class ATM {
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInsertedException {
-        if( card == null || card.isBlocked()){
-            throw new NoCardInsertedException();
-        }
-        else {
-            Account acc = card.getAccount();
-            return acc.getBalance();
-        }
+        if (this.card == null || this.card.isBlocked())throw new NoCardInsertedException();
+        Account acc = card.getAccount();
+        return acc.getBalance();
     }
 
     //Метод для снятия указанной суммы

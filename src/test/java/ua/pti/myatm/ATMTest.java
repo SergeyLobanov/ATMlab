@@ -54,6 +54,7 @@ public class ATMTest {
         assertFalse(atm.validateCard(card, pinCode));
         verify(card).isBlocked();
     }
+
     @Test
     public void testValidateCardWithIllegalPIN() {
         System.out.println("validateCardWithIllegalPINCode");
@@ -63,7 +64,7 @@ public class ATMTest {
         when(card.checkPin(pinCode)).thenReturn(false);
         when(card.isBlocked()).thenReturn(false);
         assertFalse(atm.validateCard(card, pinCode));
-        verify(card).checkPin(pinCode);//do we need it?
+        verify(card).checkPin(pinCode);
     }
 
     @Test
@@ -78,11 +79,20 @@ public class ATMTest {
         when(card.getAccount()).thenReturn(acc);
         double accBalance = 830;
         when(acc.getBalance()).thenReturn(accBalance);
-        assertTrue(atm.validateCard(card, pinCode));// need assert or just validate?
+        atm.validateCard(card, pinCode);
         assertEquals(accBalance, atm.checkBalance(), 0.0);
         InOrder inOrder = inOrder(card,acc);
         inOrder.verify(card).getAccount();
         inOrder.verify(acc).getBalance();
+    }
+
+    @Test(expected = NoCardInsertedException.class)
+    public void testCheckBalanceWithoutCard() throws NoCardInsertedException {
+        System.out.println("checkBalance");
+        ATM atm = new ATM(1000);
+        Card card = mock(Card.class);
+        when(card.isBlocked()).thenReturn(true);
+        atm.checkBalance();
     }
 
     @Test
@@ -105,13 +115,6 @@ public class ATMTest {
         when(acc.getBalance()).thenReturn(accBalance - amount);
         assertEquals(atm.getMoneyInATM(), atmBalance - amount, 0.0);
         assertEquals(atm.checkBalance(), accBalance - amount, 0.0);
-        assertEquals(600, acc.getBalance(), 0.0);//we need obvious chek?
-//        InOrder inOrder = inOrder(card,acc);
-//        inOrder.verify(card).checkPin(pinCode);
-//        inOrder.verify(card).isBlocked();
-//        inOrder.verify(card).getAccount();
-//        inOrder.verify(acc, atLeastOnce()).getBalance();
-//        inOrder.verify(acc, times(1)).withdrow(amount);
     }
 
     @Test(expected = NotEnoughMoneyInATMException.class)
