@@ -11,13 +11,10 @@ public class ATM {
             throw new UnsupportedOperationException("ATM can't have negative balance");
         else
             this.ATMBalance = moneyInATM;
-            this.ATMBalance = moneyInATM;
-        this.card = null;
     }
 
     // Возвращает количестов денег в банкомате
     public double getMoneyInATM() {
-        System.out.println("ATM have: ");
         return ATMBalance;
     }
         
@@ -27,7 +24,6 @@ public class ATM {
     // у ATM с данной картой должен генерировать исключение NoCardInserted
     public boolean validateCard(Card card, int pinCode){
         if( !card.checkPin(pinCode) || card.isBlocked()){
-            System.out.println("Illegal PIN Code or Card is blocked");
             return false;
         }
         else {
@@ -38,7 +34,7 @@ public class ATM {
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInserted{
-        if( this.card != null ){
+        if( card != null ){
             Account acc = card.getAccount();
             return acc.getBalance();
         }

@@ -126,5 +126,4 @@ public class ATMTest {
         inOrder.verify(card).getAccount();
         inOrder.verify(account).getBalance();
     }
-    
 }

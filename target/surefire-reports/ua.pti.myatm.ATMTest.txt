@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: ua.pti.myatm.ATMTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 1.11 sec <<< FAILURE!
-testGetCash(ua.pti.myatm.ATMTest)  Time elapsed: 0.082 sec  <<< FAILURE!
+Tests run: 7, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.782 sec <<< FAILURE!
+testGetCash(ua.pti.myatm.ATMTest)  Time elapsed: 0.059 sec  <<< FAILURE!
 org.mockito.exceptions.verification.VerificationInOrderFailure: 
 Verification in order failure
 Wanted but not invoked:
@@ -10,7 +10,7 @@ account.withdrow(230.0);
 -> at ua.pti.myatm.ATMTest.testGetCash(ATMTest.java:89)
 Wanted anywhere AFTER following interaction:
 account.getBalance();
--> at ua.pti.myatm.ATM.checkBalance(ATM.java:43)
+-> at ua.pti.myatm.ATM.checkBalance(ATM.java:41)
 
 	at ua.pti.myatm.ATMTest.testGetCash(ATMTest.java:89)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -42,7 +42,7 @@ account.getBalance();
 	at org.apache.maven.surefire.booter.SurefireStarter.invokeProvider(SurefireStarter.java:175)
 	at org.apache.maven.surefire.booter.SurefireStarter.runSuitesInProcessWhenForked(SurefireStarter.java:107)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:68)
-testCheckBalance(ua.pti.myatm.ATMTest)  Time elapsed: 0.038 sec  <<< FAILURE!
+testCheckBalance(ua.pti.myatm.ATMTest)  Time elapsed: 0.002 sec  <<< FAILURE!
 Wanted but not invoked:
 card.checkPin(1111);
 -> at ua.pti.myatm.ATMTest.testCheckBalance(ATMTest.java:59)
