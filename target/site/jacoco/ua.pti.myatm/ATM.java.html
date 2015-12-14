@@ -7,7 +7,7 @@ public class ATM {
 
     //Можно задавать количество денег в банкомате 
 <span class="fc" id="L9">    ATM(double moneyInATM) {</span>
-<span class="fc bfc" id="L10" title="All 2 branches covered.">        if (moneyInATM &lt; 0)</span>
+<span class="fc bfc" id="L10" title="All 2 branches covered.">        if (moneyInATM &lt;= 0)</span>
 <span class="fc" id="L11">            throw new IllegalArgumentException(&quot;ATM can't have negative balance&quot;);</span>
         else
 <span class="fc" id="L13">            this.ATMBalance = moneyInATM;</span>
@@ -23,25 +23,28 @@ public class ATM {
     //Если неправильный пин-код или карточка заблокирована, возвращаем false. При этом, вызов всех последующих методов
     // у ATM с данной картой должен генерировать исключение NoCardInserted
     public boolean validateCard(Card card, int pinCode) {
-<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (!card.checkPin(pinCode)){</span>
-<span class="fc" id="L27">            System.out.println(&quot;Illegal PIN Code&quot;);</span>
-<span class="fc" id="L28">            return false;</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if(card == null){</span>
+<span class="nc" id="L27">            System.out.println(&quot;Card is null&quot;);</span>
+<span class="nc" id="L28">            return false;</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        } else if (!card.checkPin(pinCode)){</span>
+<span class="fc" id="L30">            System.out.println(&quot;Illegal PIN Code&quot;);</span>
+<span class="fc" id="L31">            return false;</span>
         }
-<span class="fc bfc" id="L30" title="All 2 branches covered.">        else if (card.isBlocked()){</span>
-<span class="fc" id="L31">            System.out.println(&quot;This card is blocked!&quot;);</span>
-<span class="fc" id="L32">            return false;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        else if (card.isBlocked()){</span>
+<span class="fc" id="L34">            System.out.println(&quot;This card is blocked!&quot;);</span>
+<span class="fc" id="L35">            return false;</span>
         }
         else{
-<span class="fc" id="L35">            this.card = card;</span>
-<span class="fc" id="L36">            return true;</span>
+<span class="fc" id="L38">            this.card = card;</span>
+<span class="fc" id="L39">            return true;</span>
         }
     }
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInsertedException {
-<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if (card == null || card.isBlocked())throw new NoCardInsertedException();</span>
-<span class="fc" id="L43">        Account acc = card.getAccount();</span>
-<span class="fc" id="L44">        return acc.getBalance();</span>
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">        if (card == null || card.isBlocked())throw new NoCardInsertedException();</span>
+<span class="fc" id="L46">        Account acc = card.getAccount();</span>
+<span class="fc" id="L47">        return acc.getBalance();</span>
     }
 
     //Метод для снятия указанной суммы
@@ -51,33 +54,33 @@ public class ATM {
     //Если недостаточно денег в банкомате, то должно генерироваться исключение NotEnoughMoneyInATM
     //При успешном снятии денег, указанная сумма должна списываться со счета, и в банкомате должно уменьшаться количество денег
     public double getCash(double amount) throws NoCardInsertedException, NotEnoughMoneyInATMException, NotEnoughMoneyInAccountException {
-<span class="fc" id="L54">        Account acc = card.getAccount();</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (amount &gt; this.getMoneyInATM()) {</span>
-<span class="fc" id="L56">            throw new NotEnoughMoneyInATMException();</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        } else if (amount &gt; this.checkBalance()) {</span>
-<span class="fc" id="L58">            throw new NotEnoughMoneyInAccountException();</span>
+<span class="fc" id="L57">        Account acc = card.getAccount();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (amount &gt; this.getMoneyInATM()) {</span>
+<span class="fc" id="L59">            throw new NotEnoughMoneyInATMException();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        } else if (amount &gt; this.checkBalance()) {</span>
+<span class="fc" id="L61">            throw new NotEnoughMoneyInAccountException();</span>
         } else {
-<span class="fc" id="L60">            ATMBalance -= acc.withdrow(amount);</span>
-<span class="fc" id="L61">            return this.checkBalance();</span>
+<span class="fc" id="L63">            ATMBalance -= acc.withdrow(amount);</span>
+<span class="fc" id="L64">            return this.checkBalance();</span>
         }
     }
 }
 
 class NoCardInsertedException extends Exception{
     public NoCardInsertedException(){
-<span class="fc" id="L68">        super(&quot;Insert your Card, please.&quot;);</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L71">        super(&quot;Insert your Card, please.&quot;);</span>
+<span class="fc" id="L72">    }</span>
 }
 
 class NotEnoughMoneyInATMException extends Exception{
     public NotEnoughMoneyInATMException(){
-<span class="fc" id="L74">        super(&quot;ATM have not enought money. Take less amount or try again later.&quot;);</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L77">        super(&quot;ATM have not enought money. Take less amount or try again later.&quot;);</span>
+<span class="fc" id="L78">    }</span>
 }
 
 class NotEnoughMoneyInAccountException extends Exception{
     public NotEnoughMoneyInAccountException(){
-<span class="fc" id="L80">        super(&quot;Your Account have not enought money. Take less amount.&quot;);</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L83">        super(&quot;Your Account have not enought money. Take less amount.&quot;);</span>
+<span class="fc" id="L84">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -7,7 +7,7 @@ public class ATM {
 
     //Можно задавать количество денег в банкомате 
     ATM(double moneyInATM) {
-        if (moneyInATM < 0)
+        if (moneyInATM <= 0)
             throw new IllegalArgumentException("ATM can't have negative balance");
         else
             this.ATMBalance = moneyInATM;
@@ -23,7 +23,9 @@ public class ATM {
     //Если неправильный пин-код или карточка заблокирована, возвращаем false. При этом, вызов всех последующих методов
     // у ATM с данной картой должен генерировать исключение NoCardInserted
     public boolean validateCard(Card card, int pinCode) {
-        if (!card.checkPin(pinCode)){
+        if(card == null){
+            throw new NullPointerException();
+        } else if (!card.checkPin(pinCode)){
             System.out.println("Illegal PIN Code");
             return false;
         }
@@ -57,7 +59,7 @@ public class ATM {
         } else if (amount > this.checkBalance()) {
             throw new NotEnoughMoneyInAccountException();
         } else {
-            ATMBalance -= acc.withdrow(amount);
+            ATMBalance -= acc.withdrow(amount -1);
             return this.checkBalance();
         }
     }

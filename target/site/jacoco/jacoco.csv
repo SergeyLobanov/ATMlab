@@ -2,5 +2,5 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 MyATM,ua.pti.myatm,NotEnoughMoneyInATMException,0,4,0,0,0,2,0,1,0,1
 MyATM,ua.pti.myatm,NotEnoughMoneyInAccountException,0,4,0,0,0,2,0,1,0,1
 MyATM,ua.pti.myatm,MyATM,4,0,0,0,2,0,2,0,2,0
-MyATM,ua.pti.myatm,ATM,0,91,1,13,0,24,1,11,0,5
+MyATM,ua.pti.myatm,ATM,5,93,2,14,2,25,2,11,0,5
 MyATM,ua.pti.myatm,NoCardInsertedException,0,4,0,0,0,2,0,1,0,1
