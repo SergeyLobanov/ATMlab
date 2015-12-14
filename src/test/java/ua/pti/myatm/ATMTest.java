@@ -103,7 +103,7 @@ public class ATMTest {
         Card card = mock(Card.class);
         int pinCode = 1111;
         when(card.checkPin(pinCode)).thenReturn(true);
-        when(card.isBlocked()).thenReturn(false);;
+        when(card.isBlocked()).thenReturn(false);
         atm.validateCard(card, pinCode);
         Account acc = mock(Account.class);
         when(card.getAccount()).thenReturn(acc);
@@ -119,6 +119,22 @@ public class ATMTest {
         inOrder.verify(acc, atLeastOnce()).getBalance();
         when(acc.getBalance()).thenReturn(accBalance - amount);
         assertEquals(600, acc.getBalance(), 0.0);
+    }
+
+    @Test
+    public void testGetNegativeCash() throws NotEnoughMoneyInAccountException, NotEnoughMoneyInATMException, NoCardInsertedException {
+        System.out.println("getNegativeCash");
+        double atmBalance = 1000;
+        ATM atm = new ATM(atmBalance);
+        Card card = mock(Card.class);
+        int pinCode = 1111;
+        when(card.checkPin(pinCode)).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        atm.validateCard(card, pinCode);
+        Account acc = mock(Account.class);
+        when(card.getAccount()).thenReturn(acc);
+        double amount = -300;
+        atm.getCash(amount);
     }
 
     @Test(expected = NotEnoughMoneyInATMException.class)

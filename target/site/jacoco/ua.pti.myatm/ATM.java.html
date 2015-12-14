@@ -39,7 +39,7 @@ public class ATM {
 
     //Возвращает сколько денег есть на счету
     public double checkBalance() throws NoCardInsertedException {
-<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if (this.card == null || this.card.isBlocked())throw new NoCardInsertedException();</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if (card == null || card.isBlocked())throw new NoCardInsertedException();</span>
 <span class="fc" id="L43">        Account acc = card.getAccount();</span>
 <span class="fc" id="L44">        return acc.getBalance();</span>
     }
